@@ -18,7 +18,8 @@ dependencies:
   permission_handler: ^5.1.0+2 # 权限
   crypto: ^2.1.5 # 加密
   sound_stream: ^0.2.0 # 获取音频流
-  web_socket_channel: ^1.2.0
+  web_socket_channel: ^1.2.0 # socket
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

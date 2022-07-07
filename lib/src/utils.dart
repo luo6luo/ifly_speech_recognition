@@ -1,3 +1,4 @@
+/// 移除Map中值为null的字段
 Map<String, dynamic> removeNullFromMap(Map<String, dynamic> originMap,
     {bool recursive = true}) {
   Map<String, dynamic> result = {};
