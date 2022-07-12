@@ -113,7 +113,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.2"
+    version: "0.0.2+2"
   intl:
     dependency: transitive
     description:
@@ -171,9 +171,11 @@ packages:
   sound_stream:
     dependency: transitive
     description:
-      name: sound_stream
-      url: "https://pub.flutter-io.cn"
-    source: hosted
+      path: "."
+      ref: "0.2.0"
+      resolved-ref: fc69996d7495bbfeaff397b37a13f174bd68cf49
+      url: "https://github.com/luo6luo/flutter-sound-stream.git"
+    source: git
     version: "0.2.0"
   source_span:
     dependency: transitive
