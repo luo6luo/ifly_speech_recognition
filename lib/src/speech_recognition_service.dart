@@ -84,12 +84,18 @@ class SpeechRecognitionService {
 
   void dispose() {
     stopRecord();
-    _recorderStatus.cancel();
-    _recorderStatus = null;
-    _audioStream.cancel();
-    _audioStream = null;
-    _recorderStreamController.close();
-    _recorderStreamController = null;
+    if (_recorderStatus != null) {
+      _recorderStatus.cancel();
+      _recorderStatus = null;
+    }
+    if (_audioStream != null) {
+      _audioStream.cancel();
+      _audioStream = null;
+    }
+    if (_recorderStreamController != null) {
+      _recorderStreamController.close();
+      _recorderStreamController = null;
+    }
     if (_timer != null) {
       _timer.cancel();
       _timer = null;
