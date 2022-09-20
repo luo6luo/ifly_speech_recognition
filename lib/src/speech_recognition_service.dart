@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:ifly_speech_recognition/generated/json/base/json_convert_content.dart';
 import 'package:ifly_speech_recognition/src/speech_recognition_entity.dart';
 import 'package:ifly_speech_recognition/src/speech_recognition_result_entity.dart';
@@ -12,7 +11,7 @@ import 'package:sound_stream/sound_stream.dart';
 import 'package:web_socket_channel/io.dart';
 
 class SpeechRecognitionService {
-  static SpeechRecognitionService _instance;
+  static SpeechRecognitionService? _instance;
   SpeechRecognitionService._internal(
     this.appId,
     this.appKey,
@@ -26,9 +25,9 @@ class SpeechRecognitionService {
   final String appSecret;
 
   factory SpeechRecognitionService({
-    @required String appId,
-    @required String appKey,
-    @required String appSecret,
+    required String appId,
+    required String appKey,
+    required String appSecret,
   }) =>
       _instance ?? SpeechRecognitionService._internal(appId, appKey, appSecret);
 
@@ -40,7 +39,7 @@ class SpeechRecognitionService {
   bool _isRecording = false;
 
   /// 计时器
-  Timer _timer;
+  Timer? _timer;
 
   /// 录音计时
   int _recordingTime = 0;
@@ -52,15 +51,15 @@ class SpeechRecognitionService {
   final _recorder = RecorderStream();
 
   /// 录音状态订阅
-  StreamSubscription _recorderStatus;
+  StreamSubscription? _recorderStatus;
 
   /// 音频流订阅
-  StreamSubscription _audioStream;
+  StreamSubscription? _audioStream;
 
   /// 录音结果回调控制器
-  StreamController<String> _recorderStreamController;
+  StreamController<String>? _recorderStreamController;
 
-  IOWebSocketChannel _channel;
+  IOWebSocketChannel? _channel;
 
   /// 初始化
   Future<void> initRecorder() async {
@@ -73,31 +72,30 @@ class SpeechRecognitionService {
       }
     });
     _audioStream = _recorder.audioStream.listen((data) {
-      if (data != null && data.length > 0) {
+      if (data.length > 0) {
         _micChunks.addAll(data);
       }
     });
 
     await _recorder.initialize();
-    return true;
   }
 
   void dispose() {
     stopRecord();
     if (_recorderStatus != null) {
-      _recorderStatus.cancel();
+      _recorderStatus!.cancel();
       _recorderStatus = null;
     }
     if (_audioStream != null) {
-      _audioStream.cancel();
+      _audioStream!.cancel();
       _audioStream = null;
     }
     if (_recorderStreamController != null) {
-      _recorderStreamController.close();
+      _recorderStreamController!.close();
       _recorderStreamController = null;
     }
     if (_timer != null) {
-      _timer.cancel();
+      _timer!.cancel();
       _timer = null;
     }
   }
@@ -135,7 +133,7 @@ class SpeechRecognitionService {
   Future<bool> stopRecord() async {
     if (_isRecording) {
       if (_timer != null) {
-        _timer.cancel();
+        _timer!.cancel();
         _timer = null;
         _recordingTime = 0;
       }
@@ -156,7 +154,7 @@ class SpeechRecognitionService {
     if (_recorderStreamController == null) {
       _recorderStreamController = StreamController();
     }
-    return _recorderStreamController.stream;
+    return _recorderStreamController!.stream;
   }
 
   // ---------------- 科大讯飞语音识别 ----------------
@@ -178,7 +176,7 @@ class SpeechRecognitionService {
   int _status = 0;
 
   /// 识别结果(词汇组)
-  List<String> _recognitionResultList = [];
+  List<String?> _recognitionResultList = [];
 
   /// 连接科大讯飞服务器
   void _connectSocket() {
@@ -186,7 +184,7 @@ class SpeechRecognitionService {
     _recognitionResultList.clear();
     final url = _authorizationUrl();
     _channel = IOWebSocketChannel.connect(Uri.parse(url));
-    _channel.stream.listen(
+    _channel!.stream.listen(
       _onData,
       onError: _onError,
       onDone: _onDone,
@@ -197,7 +195,7 @@ class SpeechRecognitionService {
   /// 断开连接科大讯飞服务器
   void _disconnectSocket() {
     if (_channel != null && _isActiveDisconnect) {
-      _channel.sink.close();
+      _channel!.sink.close();
     }
   }
 
@@ -205,29 +203,30 @@ class SpeechRecognitionService {
   void _onData(data) {
     print('接收信息: $data');
     final json = jsonDecode(data);
-    final entity = JsonConvert.fromJsonAsT<SpeechRecognitionResultEntity>(json);
-    if (entity.data.status == 2) {
+    final entity =
+        JsonConvert.fromJsonAsT<SpeechRecognitionResultEntity>(json);
+    if (entity.data!.status == 2) {
       _isActiveDisconnect = true;
       _disconnectSocket();
     }
 
     if (entity.code == 0) {
-      final ws = entity?.data?.result?.ws ?? [];
+      final ws = entity.data?.result?.ws ?? [];
       if (ws.length == 0) return;
 
-      List<SpeechRecognitionResultDataResultWsCw> cw = [];
+      List<SpeechRecognitionResultDataResultWsCw?> cw = [];
       ws.forEach((element) {
-        if (element.cw != null) {
-          cw.addAll(element.cw);
+        if (element!.cw != null) {
+          cw.addAll(element.cw!);
         }
       });
-      final results = cw.map((e) => e.w);
+      final results = cw.map((e) => e!.w);
       _recognitionResultList.addAll(results);
       print('识别结果：$results');
     }
 
-    if (entity?.data?.result?.isLast == true) {
-      _recorderStreamController.sink.add(_recognitionResultList.join(''));
+    if (entity.data?.result?.isLast == true) {
+      _recorderStreamController!.sink.add(_recognitionResultList.join(''));
     }
   }
 
@@ -247,7 +246,7 @@ class SpeechRecognitionService {
   /// 语音识别
   void speechRecognition() async {
     if (_micChunks.length <= _kFrameSize * 3) {
-      _recorderStreamController.sink.addError('说话时间太短');
+      _recorderStreamController!.sink.addError('说话时间太短');
       return;
     }
 
@@ -278,7 +277,7 @@ class SpeechRecognitionService {
 
       // 间隔40ms发送一帧，官方文档要求每次发送最少间隔40ms
       await Future.delayed(_kInterval, () {
-        _channel.sink.add(frame);
+        _channel!.sink.add(frame);
       });
     }
   }
@@ -291,7 +290,7 @@ class SpeechRecognitionService {
       ..status = _status
       ..format = 'audio/L16;rate=16000'
       ..encoding = 'raw'
-      ..audio = base64.encode(bytes) ?? '';
+      ..audio = base64.encode(bytes);
 
     SpeechRecognitionEntity params = SpeechRecognitionEntity();
     if (_status == 0) {
