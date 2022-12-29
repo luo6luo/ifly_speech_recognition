@@ -82,22 +82,17 @@ class SpeechRecognitionService {
 
   void dispose() {
     stopRecord();
-    if (_recorderStatus != null) {
-      _recorderStatus!.cancel();
-      _recorderStatus = null;
-    }
-    if (_audioStream != null) {
-      _audioStream!.cancel();
-      _audioStream = null;
-    }
-    if (_recorderStreamController != null) {
-      _recorderStreamController!.close();
-      _recorderStreamController = null;
-    }
-    if (_timer != null) {
-      _timer!.cancel();
-      _timer = null;
-    }
+    _recorderStatus?.cancel();
+    _recorderStatus = null;
+
+    _audioStream?.cancel();
+    _audioStream = null;
+
+    _recorderStreamController?.close();
+    _recorderStreamController = null;
+
+    _timer?.cancel();
+    _timer = null;
   }
 
   // ---------------- 录音 ----------------
@@ -152,7 +147,7 @@ class SpeechRecognitionService {
   /// 录制结果回调
   Stream<String> onRecordResult() {
     if (_recorderStreamController == null) {
-      _recorderStreamController = StreamController();
+      _recorderStreamController = StreamController.broadcast();
     }
     return _recorderStreamController!.stream;
   }
@@ -203,8 +198,7 @@ class SpeechRecognitionService {
   void _onData(data) {
     print('接收信息: $data');
     final json = jsonDecode(data);
-    final entity =
-        JsonConvert.fromJsonAsT<SpeechRecognitionResultEntity>(json);
+    final entity = JsonConvert.fromJsonAsT<SpeechRecognitionResultEntity>(json);
     if (entity.data!.status == 2) {
       _isActiveDisconnect = true;
       _disconnectSocket();

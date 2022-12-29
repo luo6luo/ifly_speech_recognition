@@ -1,11 +1,10 @@
 name: ifly_speech_recognition
 description: ifly speech recognition package.
-version: 0.2.0+1
+version: 0.2.0+2
 homepage: https://github.com/luo6luo/ifly_speech_recognition
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
-  flutter: ">=2.0.0"
 
 dependencies:
   flutter:
@@ -14,7 +13,7 @@ dependencies:
   sound_stream: ^0.3.0
   cupertino_icons: ^1.0.5
   intl: ^0.17.0 # 日期转换
-  crypto: ^3.0.1 # 加密
+  crypto: ^3.0.2 # 加密
   web_socket_channel: ^2.2.0 # socket
 
 dev_dependencies:

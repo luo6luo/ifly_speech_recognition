@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }, onError: (err) {
       EasyLoading.dismiss();
-      print(err);
+      debugPrint(err);
     });
   }
 
@@ -99,9 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(_result ?? ''),
             ElevatedButton(
               onPressed: _startRecord,
               child: Text('开始录音'),
@@ -109,6 +107,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
               onPressed: _stopRecord,
               child: Text('停止录音'),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 50),
+              child: Text(_result ?? ''),
             ),
           ],
         ),
@@ -123,14 +125,15 @@ class _MyHomePageState extends State<MyHomePage> {
       return;
     }
 
+    EasyLoading.show(status: '正在录音');
     final r = await _recognitionService.startRecord();
-    print('开启录音: $r');
+    debugPrint('开启录音: $r');
   }
 
   /// 结束录音
   void _stopRecord() async {
     final r = await _recognitionService.stopRecord();
-    print('关闭录音: $r');
+    debugPrint('关闭录音: $r');
 
     // 识别语音
     EasyLoading.show(status: 'loading...');
