@@ -117,9 +117,11 @@ packages:
   sound_stream:
     dependency: "direct main"
     description:
-      name: sound_stream
-      url: "https://pub.flutter-io.cn"
-    source: hosted
+      path: "."
+      ref: "0.3.0+1"
+      resolved-ref: "327cf75a8fffd45e0931e5838ac114c231e15cf7"
+      url: "https://github.com/luo6luo/flutter-sound-stream.git"
+    source: git
     version: "0.3.0"
   source_span:
     dependency: transitive
