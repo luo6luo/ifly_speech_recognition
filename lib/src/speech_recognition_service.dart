@@ -154,7 +154,7 @@ class SpeechRecognitionService {
   /// 录制结果回调
   Stream<String> onRecordResult() {
     if (_recorderStreamController == null) {
-      _recorderStreamController = StreamController();
+      _recorderStreamController = StreamController.broadcast();
     }
     return _recorderStreamController.stream;
   }
