@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/widgets.dart';
 import 'package:ifly_speech_recognition/generated/json/base/json_convert_content.dart';
 import 'package:ifly_speech_recognition/src/speech_recognition_entity.dart';
 import 'package:ifly_speech_recognition/src/speech_recognition_result_entity.dart';
@@ -64,7 +65,7 @@ class SpeechRecognitionService {
   /// 初始化
   Future<void> initRecorder() async {
     _recorderStatus = _recorder.status.listen((status) {
-      print('recorderStatus: $status');
+      debugPrint('recorderStatus: $status');
       if (status == SoundStreamStatus.Playing) {
         _isRecording = true;
       } else if (status == SoundStreamStatus.Stopped) {
@@ -113,9 +114,9 @@ class SpeechRecognitionService {
       try {
         _micChunks.clear();
         final r = await _recorder.start();
-        print('开启录音：$r');
+        debugPrint('开启录音：$r');
       } catch (e) {
-        print('开启录音出错：$e');
+        debugPrint('开启录音出错：$e');
       }
 
       return true;
@@ -135,9 +136,9 @@ class SpeechRecognitionService {
 
       try {
         final r = await _recorder.stop();
-        print('停止录音：$r');
+        debugPrint('停止录音：$r');
       } catch (e) {
-        print('停止录音出错：$e');
+        debugPrint('停止录音出错：$e');
       }
       return true;
     }
@@ -162,13 +163,21 @@ class SpeechRecognitionService {
   bool _isActiveDisconnect = false;
 
   /// 每一帧的大小
-  static final _kFrameSize = 1280;
+  static const _kFrameSize = 1280;
+
+  /// 中间帧上传时，取 _kUnitFrameCount 帧一起上传
+  static const _kUnitFrameCount = 10;
 
   /// 每一帧上传间隔
   static const Duration _kInterval = Duration(milliseconds: 40);
 
-  /// 音频的状态（0：第一帧，1：中间的音频，2：最后一帧）
+  /// 发送音频的状态（0：第一帧，1：中间的音频，2：最后一帧）
+  /// * 仅表示放松音频状态，在发送完之前，服务器就可以认为已结束
   int _status = 0;
+
+  /// 服务器返回识别结果，表示是否是最后一片结果
+  /// * 如果静默时间超过设置值，服务器会认为已经结束上传，但是此时可能还没有结束发送音频
+  bool _isCompleted = false;
 
   /// 识别结果(词汇组)
   List<String?> _recognitionResultList = [];
@@ -184,7 +193,7 @@ class SpeechRecognitionService {
       onError: _onError,
       onDone: _onDone,
     );
-    print('连接成功');
+    debugPrint('连接成功');
   }
 
   /// 断开连接科大讯飞服务器
@@ -194,14 +203,22 @@ class SpeechRecognitionService {
     }
   }
 
+  /// 断开科大讯飞服务器之前的预判断
+  void _preDisconnectSocket() {
+    if (_isCompleted && _status == 2) {
+      _isActiveDisconnect = true;
+      _disconnectSocket();
+    }
+  }
+
   /// 接收信息
   void _onData(data) {
-    print('接收信息: $data');
+    debugPrint('接收信息: $data');
     final json = jsonDecode(data);
     final entity = JsonConvert.fromJsonAsT<SpeechRecognitionResultEntity>(json);
     if (entity.data!.status == 2) {
-      _isActiveDisconnect = true;
-      _disconnectSocket();
+      _isCompleted = true;
+      _preDisconnectSocket();
     }
 
     if (entity.code == 0) {
@@ -216,7 +233,7 @@ class SpeechRecognitionService {
       });
       final results = cw.map((e) => e!.w);
       _recognitionResultList.addAll(results);
-      print('识别结果：$results');
+      debugPrint('识别结果：$results');
     }
 
     if (entity.data?.result?.isLast == true) {
@@ -226,12 +243,14 @@ class SpeechRecognitionService {
 
   /// 连接错误
   void _onError(err) {
-    print('连接错误：$err');
+    debugPrint('连接错误：$err');
+    _channel!.sink.close();
   }
 
   /// 连接断开
   void _onDone() {
-    print('连接断开');
+    debugPrint('连接断开');
+
     if (!_isActiveDisconnect) {
       _connectSocket();
     }
@@ -252,28 +271,45 @@ class SpeechRecognitionService {
 
     // 连接服务器，准备上传
     _isActiveDisconnect = false;
+    _isCompleted = false;
     _connectSocket();
 
+    debugPrint('帧数：$frameCount，长度：${_micChunks.length}');
+
     // 首帧
-    for (int i = 0; i < frameCount; i++) {
-      String frame;
-      if (i == frameCount - 1) {
-        // 尾帧
-        _status = 2;
-        frame = _recognitionParams(_micChunks.sublist(i * _kFrameSize));
+    _status = 0;
+    await _uploadFrames(0, _kFrameSize);
+
+    // 中间，每 _kUnitFrameCount 帧上传一次
+    _status = 1;
+    final count = ((frameCount - 2) / _kUnitFrameCount).ceil();
+    for (int i = 0; i < count; i++) {
+      final start = _kFrameSize + i * _kFrameSize * _kUnitFrameCount;
+      int end;
+      if (i == count - 1 && (frameCount - 2) % _kUnitFrameCount != 0) {
+        // 最后一次上传，可能帧数没有50
+        end = start + (frameCount - 2) % _kUnitFrameCount * _kFrameSize;
       } else {
-        // 首帧，中间
-        _status = 1;
-        if (i == 0) _status = 0;
-        frame = _recognitionParams(
-            _micChunks.sublist(i * _kFrameSize, (i + 1) * _kFrameSize));
+        end = start + _kFrameSize * _kUnitFrameCount;
       }
 
-      // 间隔40ms发送一帧，官方文档要求每次发送最少间隔40ms
-      await Future.delayed(_kInterval, () {
-        _channel!.sink.add(frame);
-      });
+      await _uploadFrames(start, end);
     }
+
+    // 尾帧
+    _status = 2;
+    await _uploadFrames((frameCount - 1) * _kFrameSize);
+    _preDisconnectSocket();
+  }
+
+  /// 上传帧
+  Future<void> _uploadFrames(int startFrame, [int? endFrame]) async {
+    String frame = _recognitionParams(_micChunks.sublist(startFrame, endFrame));
+    // 间隔40ms发送一帧，官方文档要求每次发送最少间隔40ms
+    await Future.delayed(_kInterval, () {
+      debugPrint('上传帧发送：status=$_status，$startFrame - $endFrame');
+      _channel!.sink.add(frame);
+    });
   }
 
   /// 构建上传信息参数
@@ -294,7 +330,8 @@ class SpeechRecognitionService {
         ..language = 'zh_cn'
         ..domain = 'iat'
         ..accent = 'mandarin'
-        ..pd = 'health';
+        ..pd = 'health'
+        ..vadEos = 9000;
 
       params
         ..common = common
