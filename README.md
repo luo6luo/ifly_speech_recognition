@@ -1,12 +1,15 @@
 # ifly_speech_recognition
 
-根据科大讯飞**语音听写（流式版）WebAPI**文档，实现60s的语音识别功能。
+根据科大讯飞**[语音听写（流式版）WebAPI](https://www.xfyun.cn/doc/asr/voicedictation/API.html)**文档，实现60s的语音识别功能。
 
 ### 安装
 
 ```dart
 dependencies:
-  ifly_speech_recognition: ^0.0.2+1
+  ifly_speech_recognition:
+    git:
+      url: https://github.com/luo6luo/ifly_speech_recognition.git
+      ref: 0.2.1
 ```
 
 ### 导入
@@ -48,10 +51,10 @@ _recognitionService.stopRecord();
 
 ```dart
 // 语音识别回调
-_recognitionService.onRecordResult().listen((String message) {
+_recognitionService.onRecordResult().listen((message) {
   // 语音识别成功，结果为 message
 
-}, onError: (String err) {
+}, onError: (err) {
   // 语音识别失败，原因为 err
 
 });

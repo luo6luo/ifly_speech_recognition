@@ -19,7 +19,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sound_stream/ios"
 
 SPEC CHECKSUMS:
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   sound_stream: eba0f2a5994b91d9e5009a739df6e98515a7b44f
 

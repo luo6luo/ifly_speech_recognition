@@ -6,7 +6,7 @@ Map<String, dynamic> removeNullFromMap(Map<String, dynamic> originMap,
   originMap.forEach((key, value) {
     if (value == null) return;
     if (value is Map && recursive) {
-      result[key] = removeNullFromMap(value);
+      result[key] = removeNullFromMap(value as Map<String, dynamic>);
       return;
     }
 
@@ -26,7 +26,7 @@ List removeNullFromListItem(List originList, {bool recursive = true}) {
   originList.forEach((item) {
     if (item == null) return;
     if (item is Map) {
-      final _value = removeNullFromMap(item, recursive: recursive);
+      final _value = removeNullFromMap(item as Map<String, dynamic>, recursive: recursive);
       result.add(_value);
       return;
     }
