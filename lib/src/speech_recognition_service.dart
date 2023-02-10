@@ -330,7 +330,8 @@ class SpeechRecognitionService {
         ..language = 'zh_cn'
         ..domain = 'iat'
         ..accent = 'mandarin'
-        ..pd = 'health'
+        // ..pd = 'health'
+        // ..dwa = 'wpgs'
         ..vadEos = 9000;
 
       params
