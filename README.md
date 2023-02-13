@@ -9,7 +9,7 @@ dependencies:
   ifly_speech_recognition:
     git:
       url: https://github.com/luo6luo/ifly_speech_recognition.git
-      ref: 0.2.1+1
+      ref: 0.3.0
 ```
 
 ### 导入

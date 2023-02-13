@@ -1,6 +1,6 @@
 name: ifly_speech_recognition
 description: ifly speech recognition package.
-version: 0.2.1+1
+version: 0.3.0
 homepage: https://github.com/luo6luo/ifly_speech_recognition
 
 environment:
@@ -14,10 +14,8 @@ dependencies:
   intl: ^0.17.0 # 日期转换
   crypto: ^3.0.2 # 加密
   web_socket_channel: ^2.2.0 # socket
-  sound_stream:
-    git:
-      url: https://github.com/luo6luo/flutter-sound-stream.git
-      ref: 0.3.0+1
+  flutter_sound: ^9.2.13
+  audio_session: ^0.1.13
 
 dev_dependencies:
   flutter_test:
