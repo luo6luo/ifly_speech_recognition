@@ -141,7 +141,7 @@ class SpeechRecognitionService {
               _mRecordingDataController!.stream.listen((buffer) {
             if (buffer is FoodData) {
               _micChunks.add(buffer.data!);
-              debugPrint('获取音频流长度：${buffer.data!.length}');
+              // debugPrint('获取音频流长度：${buffer.data!.length}');
             }
           });
         }
@@ -358,7 +358,7 @@ class SpeechRecognitionService {
     String frame = _recognitionParams(bytes);
     // 间隔40ms发送一帧，官方文档要求每次发送最少间隔40ms
     await Future.delayed(_kInterval, () {
-      debugPrint('发送音频长度：${bytes.length}，当前状态：status=$_status');
+      // debugPrint('发送音频长度：${bytes.length}，当前状态：status=$_status');
       _channel!.sink.add(frame);
     });
   }
