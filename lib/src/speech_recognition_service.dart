@@ -136,7 +136,7 @@ class SpeechRecognitionService {
           if (_recordingTime >= _kMaxRecordingSeconds) {
             stopRecord();
           }
-          debugPrint('正在录音：$_recordingTime');
+          // debugPrint('正在录音：$_recordingTime');
         });
       }
 
@@ -381,7 +381,7 @@ class SpeechRecognitionService {
         ? (bytes.length / _kFrameSize).ceil()
         : bytes.length ~/ _kFrameSize;
 
-    debugPrint('音频流长度：${bytes.length}，总帧数：$frameCount');
+    // debugPrint('音频流长度：${bytes.length}，总帧数：$frameCount');
 
     // 小于3帧，不处理
     if (frameCount < 3) {
@@ -448,8 +448,8 @@ class SpeechRecognitionService {
     String frame = _recognitionParams(bytes);
     // 间隔40ms发送一帧，官方文档要求每次发送最少间隔40ms
     await Future.delayed(_kInterval, () {
-      debugPrint(
-          '发送音频：第$index次上传-${bytes.length}，从$startIndex-$endIndex，当前状态：status=$_status');
+      // debugPrint(
+      //     '发送音频：第$index次上传-${bytes.length}，从$startIndex-$endIndex，当前状态：status=$_status');
       _channel?.sink.add(frame);
     });
   }
@@ -465,8 +465,8 @@ class SpeechRecognitionService {
         const Duration(milliseconds: 1000),
         (timer) {
           _waitingForResultsTime++;
-          debugPrint(
-              '等待结果：$_waitingForResultsTime，status：$_status，isCompleted：$_isCompleted');
+          // debugPrint(
+          //     '等待结果：$_waitingForResultsTime，status：$_status，isCompleted：$_isCompleted');
           if (_waitingForResultsTime >= _kMaxWaitingSeconds &&
               !(_status == 2 && _isCompleted)) {
             debugPrint('服务器未返回识别结束标识，强制结束，返回结果');

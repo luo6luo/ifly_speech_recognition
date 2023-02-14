@@ -1,6 +1,6 @@
 name: ifly_speech_recognition
 description: ifly speech recognition package.
-version: 0.3.1
+version: 0.3.1+1
 homepage: https://github.com/luo6luo/ifly_speech_recognition
 
 environment:
