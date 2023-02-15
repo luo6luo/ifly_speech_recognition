@@ -6,10 +6,7 @@
 
 ```dart
 dependencies:
-  ifly_speech_recognition:
-    git:
-      url: https://github.com/luo6luo/ifly_speech_recognition.git
-      ref: 0.3.1+1
+  ifly_speech_recognition: ^0.3.1+2
 ```
 
 ### 导入
