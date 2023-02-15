@@ -89,6 +89,15 @@ class _MyHomePageState extends State<MyHomePage> {
       EasyLoading.dismiss();
       debugPrint(err);
     });
+
+    // 录音停止
+    _recognitionService.onStopRecording().listen((isAutomatic) {
+      if (isAutomatic) {
+        // 录音时间到达最大值60s，自动停止
+      } else {
+        // 主动调用 stopRecord，停止录音
+      }
+    });
   }
 
   @override

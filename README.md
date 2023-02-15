@@ -6,7 +6,7 @@
 
 ```dart
 dependencies:
-  ifly_speech_recognition: ^0.3.1+2
+  ifly_speech_recognition: ^0.3.1+3
 ```
 
 ### 导入
@@ -14,6 +14,14 @@ dependencies:
 ```dart
 import 'package:ifly_speech_recognition/ifly_speech_recognition.dart';
 ```
+
+### 配置
+- 由于依赖 [flutter_sound](https://github.com/canardoux/flutter_sound) 此三方库，所以`iOS`需要添加对应配置：
+`XCode > Build Settings > Other Linker Flags :` ` -lc++` `-lstd++`
+
+- 如果添加两个库后，出现`error: ld: library not found for -lstd++`，则可以只添加`-lc++`。
+
+*更具体内容请查看 [flutter_sound官方文档](https://flutter-sound.canardoux.xyz/flutter_sound_install.html) 底部*
 
 ### 使用
 
@@ -54,6 +62,16 @@ _recognitionService.onRecordResult().listen((message) {
 }, onError: (err) {
   // 语音识别失败，原因为 err
 
+});
+
+_recognitionService.onStopRecording().listen((isAutomatic) {
+  if (isAutomatic) {
+    // 录音时间到达最大值60s，自动停止
+
+    } else {
+    // 主动调用 stopRecord，停止录音
+
+  }
 });
 
 // 开始识别
