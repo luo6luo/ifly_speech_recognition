@@ -57,10 +57,10 @@ class _MyHomePageState extends State<MyHomePage> {
   /// 获取/判断权限
   Future<bool> _checkPermission() async {
     final status = await Permission.microphone.status;
-    if (status.isDenied) {
+    if (!status.isGranted) {
       // 无权限，则请求权限
       PermissionStatus requestStatus = await Permission.microphone.request();
-      return requestStatus != PermissionStatus.granted;
+      return requestStatus == PermissionStatus.granted;
     } else {
       return true;
     }

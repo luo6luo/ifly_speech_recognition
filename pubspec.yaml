@@ -1,21 +1,20 @@
 name: ifly_speech_recognition
-description: ifly speech recognition package.
-version: 0.3.1+3
+description: 根据科大讯飞 `语音听写（流式版）WebAPI` 文档，实现60s的语音识别功能。
+version: 0.3.2
 homepage: https://github.com/luo6luo/ifly_speech_recognition
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.14.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.5
-  intl: ^0.17.0 # 日期转换
+  intl: ^0.18.1 # 日期转换
   crypto: ^3.0.2 # 加密
-  web_socket_channel: ^2.2.0 # socket
+  web_socket_channel: ^2.3.0 # socket
   flutter_sound: ^9.2.13
-  audio_session: ^0.1.13
+  audio_session: ^0.1.16
 
 dev_dependencies:
   flutter_test:

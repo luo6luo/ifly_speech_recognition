@@ -49,3 +49,9 @@
 # 0.3.1+3
  - `example`中添加停止录音通知示例
  - 更新`README.md`文档说明
+
+# 0.3.2
+ - 更新相关依赖包版本
+ - 优化提示信息及识别中可能出现的数据解析错误
+ - `example`中，添加 `Android` `iOS` 相关权限，具体请参考 *[permission_handler](https://pub.dev/packages/permission_handler)* 文档
+ - 更新`README.md`文档说明，调整监听方法说明

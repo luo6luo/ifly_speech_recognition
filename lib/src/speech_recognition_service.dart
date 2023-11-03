@@ -74,23 +74,25 @@ class SpeechRecognitionService {
     await _mRecorder!.openRecorder();
 
     final session = await AudioSession.instance;
-    await session.configure(AudioSessionConfiguration(
-      avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
-      avAudioSessionCategoryOptions:
-          AVAudioSessionCategoryOptions.allowBluetooth |
-              AVAudioSessionCategoryOptions.defaultToSpeaker,
-      avAudioSessionMode: AVAudioSessionMode.spokenAudio,
-      avAudioSessionRouteSharingPolicy:
-          AVAudioSessionRouteSharingPolicy.defaultPolicy,
-      avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
-      androidAudioAttributes: const AndroidAudioAttributes(
-        contentType: AndroidAudioContentType.speech,
-        flags: AndroidAudioFlags.none,
-        usage: AndroidAudioUsage.voiceCommunication,
+    await session.configure(
+      AudioSessionConfiguration(
+        avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
+        avAudioSessionCategoryOptions:
+            AVAudioSessionCategoryOptions.allowBluetooth |
+                AVAudioSessionCategoryOptions.defaultToSpeaker,
+        avAudioSessionMode: AVAudioSessionMode.spokenAudio,
+        avAudioSessionRouteSharingPolicy:
+            AVAudioSessionRouteSharingPolicy.defaultPolicy,
+        avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
+        androidAudioAttributes: const AndroidAudioAttributes(
+          contentType: AndroidAudioContentType.speech,
+          flags: AndroidAudioFlags.none,
+          usage: AndroidAudioUsage.voiceCommunication,
+        ),
+        androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
+        androidWillPauseWhenDucked: true,
       ),
-      androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
-      androidWillPauseWhenDucked: true,
-    ));
+    );
 
     _mRecorderIsInited = true;
   }
@@ -233,8 +235,8 @@ class SpeechRecognitionService {
   /// 科大讯飞服务器连接的通道
   IOWebSocketChannel? _channel;
 
-  /// 当前和科大讯飞服务器连接状态
-  bool _isConnect = false;
+  // /// 当前和科大讯飞服务器连接状态
+  // bool _isConnect = false;
 
   /// 是否主动断开socket连接
   bool _isActiveDisconnect = false;
@@ -277,7 +279,7 @@ class SpeechRecognitionService {
       onError: _onError,
       onDone: _onDone,
     );
-    _isConnect = true;
+    // _isConnect = true;
     debugPrint('连接成功');
   }
 
@@ -298,9 +300,15 @@ class SpeechRecognitionService {
 
   /// 接收信息
   void _onData(data) {
-    debugPrint('接收信息: $data');
-    final json = jsonDecode(data);
-    final entity = JsonConvert.fromJsonAsT<SpeechRecognitionResultEntity>(json);
+    debugPrint('接收数据: $data');
+    SpeechRecognitionResultEntity? entity;
+    try {
+      final json = jsonDecode(data);
+      entity = JsonConvert.fromJsonAsT<SpeechRecognitionResultEntity>(json);
+    } catch (e) {
+      debugPrint('接收数据解析出错：$e');
+      return;
+    }
 
     if (entity.code == 0) _analysisData(entity.data?.result);
 
@@ -364,7 +372,7 @@ class SpeechRecognitionService {
 
   /// 连接断开
   void _onDone() {
-    _isConnect = false;
+    // _isConnect = false;
     debugPrint('连接断开');
 
     if (!_isActiveDisconnect) {
@@ -433,7 +441,7 @@ class SpeechRecognitionService {
 
   /// 处理音频流
   List<int> _handleRecordStream() {
-    List<int> bytes = _micChunks.fold([], (previousValue, element) {
+    List<int> bytes = _micChunks.fold<List<int>>([], (previousValue, element) {
       List<int> list = element.map((e) => e).toList();
       previousValue.addAll(list);
       return previousValue;
@@ -458,7 +466,7 @@ class SpeechRecognitionService {
   /// 最多等待10s，10s后未收到识别结果结束通知，默认为结束
   void _startWaitingForResults() {
     if (_status == 2 && _isCompleted) return;
-    debugPrint('已结束上传，等待是识别结果');
+    debugPrint('已结束上传，等待识别结果');
 
     if (_waitingForResultsTimer == null) {
       _waitingForResultsTimer = Timer.periodic(
