@@ -6,7 +6,7 @@
 
 ```dart
 dependencies:
-  ifly_speech_recognition: ^0.3.1+3
+  ifly_speech_recognition: ^1.0.0
 ```
 
 ### 导入
@@ -27,6 +27,7 @@ import 'package:ifly_speech_recognition/ifly_speech_recognition.dart';
 
 **使用前说明：**
 1、`app_id` `app_key` `app_secrret` 需要到 [科大讯飞开放平台](https://www.xfyun.cn/services/voicedictation) 进行应用申请
+
 2、开启语音识别前，请确保麦克风相关权限的开启，具体可参考：[permission_handler](https://pub.dev/packages/permission_handler)
 
 - 初始化一个服务

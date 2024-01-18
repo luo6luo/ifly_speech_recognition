@@ -50,8 +50,13 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    _checkPermission();
     _initRecorder();
+  }
+
+  @override
+  dispose() {
+    _recognitionService.dispose();
+    super.dispose();
   }
 
   /// 获取/判断权限
@@ -141,6 +146,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   /// 结束录音
   void _stopRecord() async {
+    if (!_havePermission) {
+      EasyLoading.showToast('请开启麦克风权限');
+      return;
+    }
+
     final r = await _recognitionService.stopRecord();
     debugPrint('关闭录音: $r');
 

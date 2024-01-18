@@ -155,7 +155,7 @@
 		97C146E61CF9000F007C117D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1300;
+				LastUpgradeCheck = 1430;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					97C146ED1CF9000F007C117D = {
@@ -204,6 +204,7 @@
 			files = (
 			);
 			inputPaths = (
+				"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}",
 			);
 			name = "Thin Binary";
 			outputPaths = (
@@ -242,7 +243,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
 		};
 		F39097CF406F6FB8CFB24A9C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -387,8 +388,6 @@
 					"\"flutter_sound_core\"",
 					"-framework",
 					"\"path_provider_foundation\"",
-					"-framework",
-					"\"permission_handler\"",
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.example;
@@ -546,8 +545,6 @@
 					"\"flutter_sound_core\"",
 					"-framework",
 					"\"path_provider_foundation\"",
-					"-framework",
-					"\"permission_handler\"",
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.test.speechRecognition;
@@ -597,8 +594,6 @@
 					"\"flutter_sound_core\"",
 					"-framework",
 					"\"path_provider_foundation\"",
-					"-framework",
-					"\"permission_handler\"",
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.example;

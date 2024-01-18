@@ -51,9 +51,12 @@ post_install do |installer|
       #  Preprocessor definitions can be found in: https://github.com/Baseflow/flutter-permission-handler/blob/master/permission_handler_apple/ios/Classes/PermissionHandlerEnums.h
       config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
         '$(inherited)',
-  
-        ## dart: PermissionGroup.calendar
+        
+        ## dart: [PermissionGroup.calendarWriteOnly, PermissionGroup.calendar (iOS 16 and below)]
         # 'PERMISSION_EVENTS=1',
+        
+        ## dart: [PermissionGroup.calendarFullAccess, PermissionGroup.calendar (iOS 17 and above)]
+        # 'PERMISSION_EVENTS_FULL_ACCESS=1',
   
         ## dart: PermissionGroup.reminders
         # 'PERMISSION_REMINDERS=1',

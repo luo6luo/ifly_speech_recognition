@@ -5,7 +5,6 @@ import 'package:audio_session/audio_session.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:ifly_speech_recognition/generated/json/base/json_convert_content.dart';
 import 'package:ifly_speech_recognition/src/speech_recognition_entity.dart';
 import 'package:ifly_speech_recognition/src/speech_recognition_result_entity.dart';
 import 'package:ifly_speech_recognition/src/utils.dart';
@@ -304,7 +303,7 @@ class SpeechRecognitionService {
     SpeechRecognitionResultEntity? entity;
     try {
       final json = jsonDecode(data);
-      entity = JsonConvert.fromJsonAsT<SpeechRecognitionResultEntity>(json);
+      entity = SpeechRecognitionResultEntity().fromJson(json);
     } catch (e) {
       debugPrint('接收数据解析出错：$e');
       return;
@@ -354,7 +353,10 @@ class SpeechRecognitionService {
     final resultStr = _resultList.fold<String>('', (previousValue, element) {
       String? r;
       if (element != null) {
-        r = element.ws?.map((e) => e?.cw?.first?.w ?? '').toList().join('');
+        r = element.ws
+            ?.map((e) => e.cw?.firstOrNull?.w ?? '')
+            .toList()
+            .join('');
       }
 
       return previousValue + (r ?? '');
