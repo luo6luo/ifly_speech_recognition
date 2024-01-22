@@ -1,6 +1,6 @@
 name: ifly_speech_recognition
 description: 根据科大讯飞 `语音听写（流式版）WebAPI` 文档，实现60s的语音识别功能。
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/luo6luo/ifly_speech_recognition
 
 environment:

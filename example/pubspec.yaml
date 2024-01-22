@@ -26,7 +26,7 @@ dependencies:
     sdk: flutter
   ifly_speech_recognition:
     path: ../
-  permission_handler: ^11.2.0
+  permission_handler: ^11.0.1
   flutter_easyloading: ^3.0.5
 
 

@@ -59,3 +59,6 @@
 # 1.0.0
  - 删除 `FlutterJsonBeanFactory` 依赖，合并 `JSON` 解析过程
  - 适配 `Dart 3.0` `Flutter 3.10.0` 版本
+
+# 1.0.1
+- 修复 `Dart 3.0.0` `Flutter 3.10.0` 时，`permission_handler` 版本错误  
