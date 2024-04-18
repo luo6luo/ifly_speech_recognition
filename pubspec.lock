@@ -13,10 +13,10 @@ packages:
     dependency: "direct main"
     description:
       name: audio_session
-      sha256: a49af9981eec5d7cd73b37bacb6ee73f8143a6a9f9bd5b6021e6c346b9b6cf4e
+      sha256: "6fdf255ed3af86535c96452c33ecff1245990bb25a605bfb1958661ccc3d467f"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.1.19"
+    version: "0.1.18"
   boolean_selector:
     dependency: transitive
     description:
@@ -397,22 +397,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "13.0.0"
-  web:
-    dependency: transitive
-    description:
-      name: web
-      sha256: "97da13628db363c635202ad97068d47c5b8aa555808e7a9411963c533b449b27"
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.5.1"
   web_socket_channel:
     dependency: "direct main"
     description:
       name: web_socket_channel
-      sha256: "58c6666b342a38816b2e7e50ed0f1e261959630becd4c879c4f26bfa14aa5a42"
+      sha256: d88238e5eac9a42bb43ca4e721edba3c08c6354d4a53063afaa568516217621b
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.4.5"
+    version: "2.4.0"
   win32:
     dependency: transitive
     description:
@@ -430,5 +422,5 @@ packages:
     source: hosted
     version: "1.0.0"
 sdks:
-  dart: ">=3.3.0 <4.0.0"
-  flutter: ">=3.0.0"
+  dart: ">=3.2.0-0 <4.0.0"
+  flutter: ">=3.10.0"
