@@ -62,3 +62,7 @@
 
 # 1.0.1
 - 修复 `Dart 3.0.0` `Flutter 3.10.0` 时，`permission_handler` 版本错误  
+
+# 1.0.2
+-  `Dart` 依赖最低版本调整为 `3.2.0`
+- 修复 [#5](https://github.com/luo6luo/ifly_speech_recognition/issues/5) 问题

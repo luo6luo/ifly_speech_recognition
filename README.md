@@ -6,7 +6,7 @@
 
 ```dart
 dependencies:
-  ifly_speech_recognition: ^1.0.0
+  ifly_speech_recognition: ^1.0.2
 ```
 
 ### 导入

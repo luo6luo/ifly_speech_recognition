@@ -71,8 +71,8 @@ class SpeechRecognitionResultData {
 
 class SpeechRecognitionResultDataResult {
   /// 开启wpgs会有此字段
-  /// 取值为 "apd"时表示该片结果是追加到前面的最终结果；
-  /// 取值为"rpl" 时表示替换前面的部分结果，替换范围为rg字段
+  /// 取值为 "apd" 时表示该片结果是追加到前面的最终结果；
+  /// 取值为 "rpl" 时表示替换前面的部分结果，替换范围为rg字段
   String? pgs;
 
   /// 替换范围，开启wpgs会有此字段

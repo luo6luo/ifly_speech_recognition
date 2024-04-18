@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 /// 移除Map中值为null的字段
 Map<String, dynamic> removeNullFromMap(Map<String, dynamic> originMap,
     {bool recursive = true}) {
@@ -26,7 +28,8 @@ List removeNullFromListItem(List originList, {bool recursive = true}) {
   originList.forEach((item) {
     if (item == null) return;
     if (item is Map) {
-      final _value = removeNullFromMap(item as Map<String, dynamic>, recursive: recursive);
+      final _value =
+          removeNullFromMap(item as Map<String, dynamic>, recursive: recursive);
       result.add(_value);
       return;
     }
@@ -39,4 +42,15 @@ List removeNullFromListItem(List originList, {bool recursive = true}) {
     result.add(item);
   });
   return result;
+}
+
+/// 数据流格式转换
+List<int> streamFormatConversion(List<Uint8List> data) {
+  List<int> bytes = data.fold<List<int>>([], (previousValue, element) {
+    List<int> list = element.map((e) => e).toList();
+    previousValue.addAll(list);
+    return previousValue;
+  });
+
+  return bytes;
 }

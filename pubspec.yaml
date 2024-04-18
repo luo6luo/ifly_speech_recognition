@@ -1,21 +1,20 @@
 name: ifly_speech_recognition
 description: 根据科大讯飞 `语音听写（流式版）WebAPI` 文档，实现60s的语音识别功能。
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/luo6luo/ifly_speech_recognition
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
-  flutter: ">=3.10.0"
+  sdk: '>=3.2.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
 
-  intl: ^0.19.0 # 日期转换
+  intl: ^0.18.1 # 日期转换（备注：Flutter官方本地化SDK需要 intl:0.18.1，为避免冲突，指定到此版本）
   crypto: ^3.0.3 # 加密
-  web_socket_channel: ^2.4.0 # socket
+  web_socket_channel: ^2.4.3 # socket
   flutter_sound: ^9.2.13
-  audio_session: ^0.1.18
+  audio_session: ^0.1.19
 
 dev_dependencies:
   flutter_test:

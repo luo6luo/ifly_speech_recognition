@@ -36,8 +36,8 @@ class _MyHomePageState extends State<MyHomePage> {
   /// 语音识别
   SpeechRecognitionService _recognitionService = SpeechRecognitionService(
     appId: 'iflyAppId',
-    appKey: 'iflyAppKey',
-    appSecret: 'iflyAppSecret',
+    appKey: 'iflyApiKey',
+    appSecret: 'iflyApiSecret',
   );
 
   /// 麦克风是否授权
