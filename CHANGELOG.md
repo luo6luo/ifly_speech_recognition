@@ -66,3 +66,6 @@
 # 1.0.2
 -  `Dart` 依赖最低版本调整为 `3.2.0`
 - 修复 [#5](https://github.com/luo6luo/ifly_speech_recognition/issues/5) 问题
+
+# 1.0.3
+- 更新 `intl` 版本为 `^0.19.0`
