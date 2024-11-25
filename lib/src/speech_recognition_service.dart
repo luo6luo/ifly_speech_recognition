@@ -343,7 +343,7 @@ mixin _RecordingMixin {
   /// 录音机是否初始化
   bool _mRecorderIsInited = false;
 
-  StreamController<Food>? _mRecordingDataController;
+  StreamController<Uint8List>? _mRecordingDataController;
 
   /// 录音流数据回调
   StreamSubscription? _mRecordingDataSubscription;
@@ -401,51 +401,44 @@ mixin _RecordingMixin {
       _resultController?.sink.addError('未初始化录音服务');
       return false;
     }
+    if (_isRecording) return false;
 
-    if (!_isRecording) {
-      _isRecording = true;
+    _isRecording = true;
 
-      // 开启倒计时
-      if (_recordingTimer == null) {
-        _recordingTimer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
-          _recordingTime++;
-          if (_recordingTime >= _kMaxRecordingSeconds) {
-            stopRecord();
-          }
-          // debugPrint('正在录音：$_recordingTime');
-        });
-      }
-
-      try {
-        _micChunks.clear();
-
-        // 此处是为了延时监听，保证初始化完毕
-        if (_mRecordingDataController == null) {
-          _mRecordingDataController = StreamController<Food>();
+    // 开启倒计时
+    if (_recordingTimer == null) {
+      _recordingTimer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+        _recordingTime++;
+        if (_recordingTime >= _kMaxRecordingSeconds) {
+          stopRecord();
         }
-        if (_mRecordingDataSubscription == null) {
-          _mRecordingDataSubscription =
-              _mRecordingDataController!.stream.listen((buffer) {
-            if (buffer is FoodData) {
-              _micChunks.add(buffer.data!);
-            }
-          });
-        }
-
-        await _mRecorder!.startRecorder(
-          toStream: _mRecordingDataController!.sink,
-          codec: Codec.pcm16,
-          numChannels: 1,
-          sampleRate: 16000,
-        );
-      } catch (e) {
-        debugPrint('开启录音出错：$e');
-      }
-
-      return true;
-    } else {
-      return false;
+        // debugPrint('正在录音：$_recordingTime');
+      });
     }
+
+    try {
+      _micChunks.clear();
+
+      // 此处是为了延时监听，保证初始化完毕
+      if (_mRecordingDataController == null) {
+        _mRecordingDataController = StreamController<Uint8List>();
+      }
+      if (_mRecordingDataSubscription == null) {
+        _mRecordingDataSubscription = _mRecordingDataController!.stream
+            .listen((buffer) => _micChunks.add(buffer));
+      }
+
+      await _mRecorder!.startRecorder(
+        toStream: _mRecordingDataController!.sink,
+        codec: Codec.pcm16,
+        numChannels: 1,
+        sampleRate: 16000,
+      );
+    } catch (e) {
+      debugPrint('开启录音出错：$e');
+    }
+
+    return true;
   }
 
   /// 停止录音
@@ -454,31 +447,28 @@ mixin _RecordingMixin {
       _resultController?.sink.addError('未初始化录音服务');
       return false;
     }
+    if (!_isRecording) return false;
 
-    if (_isRecording) {
-      _isRecording = false;
-
-      try {
-        await _mRecorder!.stopRecorder();
-        if (_recordingTime < 60) {
-          _stopRecordingController?.sink.add(false);
-        } else {
-          _stopRecordingController?.sink.add(true);
-        }
-      } catch (e) {
-        debugPrint('停止录音出错：$e');
+    _isRecording = false;
+    try {
+      await _mRecorder!.stopRecorder();
+      if (_recordingTime < 60) {
+        _stopRecordingController?.sink.add(false);
+      } else {
+        _stopRecordingController?.sink.add(true);
       }
-
-      // 清除录音计时
-      if (_recordingTimer != null) {
-        _recordingTimer!.cancel();
-        _recordingTimer = null;
-        _recordingTime = 0;
-      }
-
-      return true;
+    } catch (e) {
+      debugPrint('停止录音出错：$e');
     }
-    return false;
+
+    // 清除录音计时
+    if (_recordingTimer != null) {
+      _recordingTimer!.cancel();
+      _recordingTimer = null;
+      _recordingTime = 0;
+    }
+
+    return true;
   }
 
   /// 录制结果回调
@@ -500,12 +490,12 @@ mixin _RecordingMixin {
   }
 
   /// 获取录音数据
-  List<int> getRecordingData() {
-    return streamFormatConversion(_micChunks);
-  }
+  List<int> getRecordingData() => streamFormatConversion(_micChunks);
 
   void disposeRecording() {
     stopRecord();
+    _mRecorder!.closeRecorder();
+    _mRecorder = null;
 
     _mRecordingDataSubscription?.cancel();
     _mRecordingDataSubscription = null;
