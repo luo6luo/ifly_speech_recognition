@@ -1,13 +1,19 @@
 # ifly_speech_recognition
 
-根据科大讯飞 **[语音听写（流式版）WebAPI](https://www.xfyun.cn/doc/asr/voicedictation/API.html)** 文档，实现60s的语音识别功能。
+根据科大讯飞 **[语音听写（流式版）WebAPI](https://www.xfyun.cn/doc/asr/voicedictation/API.html)** 文档，实现 60s 的语音识别功能。
 
 ### 安装
 
 ```dart
 dependencies:
-  ifly_speech_recognition: ^1.0.5
+  ifly_speech_recognition: ^1.0.6
 ```
+
+### 环境要求
+
+- `Dart` `>=3.4.0`
+- `iOS` `13.0+`
+- `Android` 构建需 `JDK 17+`
 
 ### 导入
 
@@ -16,19 +22,14 @@ import 'package:ifly_speech_recognition/ifly_speech_recognition.dart';
 ```
 
 ### 配置
-- 由于依赖 [flutter_sound](https://github.com/canardoux/flutter_sound) 此三方库，所以`iOS`需要添加对应配置：
-`XCode > Build Settings > Other Linker Flags :` ` -lc++` `-lstd++`
 
-- 如果添加两个库后，出现`error: ld: library not found for -lstd++`，则可以只添加`-lc++`。
-
-*更具体内容请查看 [flutter_sound官方文档](https://flutter-sound.canardoux.xyz/flutter_sound_install.html) 底部*
+- 开启语音识别前，请确保麦克风等相关权限已开启，具体可参考 [permission_handler](https://pub.dev/packages/permission_handler)
+- `iOS` 依赖 [flutter_sound](https://github.com/canardoux/flutter_sound)，新版 Flutter 项目一般无需手动配置 `Other Linker Flags`；若遇链接错误可参考 [flutter_sound 官方文档](https://flutter-sound.canardoux.xyz/flutter_sound_install.html)
 
 ### 使用
 
 **使用前说明：**
 1、`app_id` `app_key` `app_secrret` 需要到 [科大讯飞开放平台](https://www.xfyun.cn/services/voicedictation) 进行应用申请
-
-2、开启语音识别前，请确保麦克风相关权限的开启，具体可参考：[permission_handler](https://pub.dev/packages/permission_handler)
 
 - 初始化一个服务
 

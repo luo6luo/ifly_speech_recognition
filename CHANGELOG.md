@@ -77,3 +77,7 @@
 - `example` 中 `android` 更新迁移
 - 更新 `flutter_sound` 相关API
 - 简化结构目录
+
+## 1.0.6
+- 更新相关依赖版本，`Dart` 最低版本调整为 `3.4.0`
+- `example` 适配 Flutter stable：`Android` 升级 Gradle/AGP 构建配置，`iOS` 修复 `audio_session` 链接错误并支持 `iOS 13.0`
