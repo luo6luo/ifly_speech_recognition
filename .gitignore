@@ -31,6 +31,9 @@
 .pub/
 build/
 
+# Library packages should not commit the root lockfile (apps like example/ keep theirs).
+/pubspec.lock
+
 # Android related
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
